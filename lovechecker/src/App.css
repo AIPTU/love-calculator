@@ -1,0 +1,251 @@
+/* Color palette */
+:root {
+  --primary-color: #ff6f61;
+  --secondary-color: #e55b50;
+  --error-color: #dc2626;
+  --background-color: #ffffff;
+  --text-color: #374151;
+}
+
+/* Global reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Main app container */
+.app-container {
+  background-color: var(--background-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: fadeIn 0.8s ease;
+}
+
+h1 {
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form fields */
+input,
+select {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1.25rem;
+  font-size: 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  transition: border-color 0.3s ease;
+  animation: fadeIn 0.3s ease 0.5s;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.2);
+}
+
+select {
+  background-color: #f9fafb;
+}
+
+/* Error messages */
+.error-message {
+  color: var(--error-color);
+  font-size: 0.875rem;
+  margin-top: -1rem;
+  margin-bottom: 1.5rem;
+  animation: slideInFade 0.5s ease;
+}
+
+/* Button styles */
+button {
+  width: 100%;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 0.75rem;
+  font-size: 1.125rem;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
+  transform: scale(1.1);
+  animation: bounce 0.5s ease;
+}
+
+button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Gender selection */
+.gender-select {
+  margin-bottom: 1.5rem;
+}
+
+.gender-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Compatibility result styles */
+.result-container {
+  margin-top: 2rem;
+  padding: 2rem;
+  background-color: #fff4e6;
+  border-radius: 1rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.result-heart {
+  font-size: 4rem;
+  color: var(--primary-color);
+  animation: pulseGlow 1.5s infinite;
+  margin-bottom: 1rem;
+}
+
+.result-text {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.result-description {
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+/* History section */
+.history-section {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.history-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.history-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.history-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  color: var(--text-color);
+  animation: fadeIn 0.3s ease;
+}
+
+.history-list li:last-child {
+  border-bottom: none;
+}
+
+.history-list li.remove {
+  animation: fadeOut 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .result-heart {
+    font-size: 3.5rem;
+  }
+
+  .result-text {
+    font-size: 1.5rem;
+  }
+
+  .result-description {
+    font-size: 1rem;
+  }
+}
+
+/* Animations */
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(255, 111, 97, 0.5);
+  }
+  50% {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 111, 97, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(255, 111, 97, 0.5);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInFade {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes rotateFade {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: rotate(180deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0;
+  }
+}
