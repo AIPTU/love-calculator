@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	@apply bg-gradient-to-r from-purple-100 to-indigo-100 text-gray-900 antialiased;
+	font-family: "Inter", sans-serif;
+	line-height: 1.6;
+}
+
+a {
+	@apply text-indigo-600 hover:text-purple-600 transition-colors duration-300 ease-in-out;
+}
+
+button {
+	@apply transition-all duration-300 ease-in-out;
+}
+
+input,
+select {
+	@apply border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 p-3;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+	@apply bg-purple-600 rounded-lg;
+}
+
+::-webkit-scrollbar-track {
+	@apply bg-purple-100;
+}
+
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-fade-in {
+	animation: fade-in 0.8s ease-out forwards;
+}
+
+.card {
+	@apply bg-white shadow-md rounded-lg p-6;
+}
+
+.card-title {
+	@apply text-2xl font-semibold text-gray-800 mb-4;
+}
+
+.card-content {
+	@apply text-gray-600 text-base;
+}
