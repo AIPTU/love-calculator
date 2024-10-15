@@ -19,6 +19,7 @@ export default function Home() {
 	const [dob2, setDob2] = useState<string>("");
 	const [result, setResult] = useState<number | null>(null);
 	const [message, setMessage] = useState<string>("");
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const zodiacSigns: ZodiacSign[] = [
 		{
@@ -101,15 +102,25 @@ export default function Home() {
 		const day = date.getDate();
 
 		return (
-			zodiacSigns.find(
-				(sign) =>
-					(month === Number(sign.start.split("-")[0]) &&
-						day >= Number(sign.start.split("-")[1])) ||
-					(month === Number(sign.end.split("-")[0]) &&
-						day <= Number(sign.end.split("-")[1])) ||
-					(month > Number(sign.start.split("-")[0]) &&
-						month < Number(sign.end.split("-")[0]))
-			)?.name || ""
+			zodiacSigns.find((sign) => {
+				const [startMonth, startDay] = sign.start.split("-").map(Number);
+				const [endMonth, endDay] = sign.end.split("-").map(Number);
+
+				if (startMonth > endMonth) {
+					return (
+						(month === startMonth && day >= startDay) ||
+						(month === endMonth && day <= endDay) ||
+						month > startMonth ||
+						month < endMonth
+					);
+				} else {
+					return (
+						(month === startMonth && day >= startDay) ||
+						(month === endMonth && day <= endDay) ||
+						(month > startMonth && month < endMonth)
+					);
+				}
+			})?.name || ""
 		);
 	};
 
@@ -139,53 +150,63 @@ export default function Home() {
 			return;
 		}
 
-		const nameValue1 = getNameValue(name1);
-		const nameValue2 = getNameValue(name2);
-		const nameCompatibility = 100 - (Math.abs(nameValue1 - nameValue2) % 100);
-
-		const ageDifference = getAgeDifference(dob1, dob2);
-		const ageCompatibility = Math.max(100 - ageDifference * 3, 0);
-
-		const zodiac1 = getZodiac(dob1);
-		const zodiac2 = getZodiac(dob2);
-		const zodiacCompatibility = getZodiacCompatibility(zodiac1, zodiac2);
-
-		const genderCompatibility = gender1 !== gender2 ? 10 : 5;
-
-		const randomFactor = Math.floor(Math.random() * 11);
-
-		const totalCompatibility =
-			(nameCompatibility +
-				ageCompatibility +
-				zodiacCompatibility +
-				genderCompatibility +
-				randomFactor) /
-			5;
-
-		const roundedResult = Math.round(totalCompatibility);
-
-		let compatibilityMessage = "";
-		if (roundedResult >= 90) {
-			compatibilityMessage =
-				"Kalian adalah pasangan yang sempurna! Seperti dua potong puzzle yang hilang!";
-		} else if (roundedResult >= 70) {
-			compatibilityMessage =
-				"Kalian sangat cocok! Sepertinya ada masa depan cerah menanti.";
-		} else if (roundedResult >= 50) {
-			compatibilityMessage =
-				"Kalian cukup cocok, tapi mungkin harus saling memahami lebih dalam.";
-		} else {
-			compatibilityMessage =
-				"Mungkin ini bukan cinta sejati, tapi siapa tahu jika kalian terus mencoba!";
+		if (new Date(dob1) > new Date() || new Date(dob2) > new Date()) {
+			alert("Please enter valid birthdates!");
+			return;
 		}
 
-		if (gender1 === gender2) {
-			compatibilityMessage +=
-				" 🏳️‍🌈 Pasangan LGBT detected! Kalian adalah bukti bahwa cinta itu bebas! 😍";
-		}
+		setLoading(true);
 
-		setResult(roundedResult);
-		setMessage(compatibilityMessage);
+		setTimeout(() => {
+			const nameValue1 = getNameValue(name1);
+			const nameValue2 = getNameValue(name2);
+			const nameCompatibility = 100 - (Math.abs(nameValue1 - nameValue2) % 100);
+
+			const ageDifference = getAgeDifference(dob1, dob2);
+			const ageCompatibility = Math.max(100 - ageDifference * 3, 0);
+
+			const zodiac1 = getZodiac(dob1);
+			const zodiac2 = getZodiac(dob2);
+			const zodiacCompatibility = getZodiacCompatibility(zodiac1, zodiac2);
+
+			const genderCompatibility = gender1 !== gender2 ? 10 : 5;
+
+			const randomFactor = Math.floor(Math.random() * 21);
+
+			const totalCompatibility =
+				(nameCompatibility +
+					ageCompatibility +
+					zodiacCompatibility +
+					genderCompatibility +
+					randomFactor) /
+				5;
+
+			const roundedResult = Math.round(totalCompatibility);
+
+			let compatibilityMessage = "";
+			if (roundedResult >= 90) {
+				compatibilityMessage =
+					"Kalian adalah pasangan yang sempurna! Seperti dua potong puzzle yang hilang!";
+			} else if (roundedResult >= 70) {
+				compatibilityMessage =
+					"Kalian sangat cocok! Sepertinya ada masa depan cerah menanti.";
+			} else if (roundedResult >= 50) {
+				compatibilityMessage =
+					"Kalian cukup cocok, tapi mungkin harus saling memahami lebih dalam.";
+			} else {
+				compatibilityMessage =
+					"Mungkin ini bukan cinta sejati, tapi siapa tahu jika kalian terus mencoba!";
+			}
+
+			if (gender1 === gender2) {
+				compatibilityMessage +=
+					" 🏳️‍🌈 Pasangan LGBT detected! Kalian adalah bukti bahwa cinta itu bebas! 😍";
+			}
+
+			setResult(roundedResult);
+			setMessage(compatibilityMessage);
+			setLoading(false);
+		}, 1000);
 	};
 
 	return (
@@ -199,12 +220,14 @@ export default function Home() {
 				<h2 className="text-3xl font-semibold mb-6 text-gray-800">Your Info</h2>
 				<input
 					type="text"
+					aria-label="Your Name"
 					placeholder="Your Name"
 					className="border border-gray-300 p-3 mb-4 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
 					value={name1}
 					onChange={(e) => setName1(e.target.value)}
 				/>
 				<select
+					aria-label="Your Gender"
 					className="border border-gray-300 p-3 mb-4 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
 					value={gender1}
 					onChange={(e) => setGender1(e.target.value)}
@@ -216,6 +239,8 @@ export default function Home() {
 				</select>
 				<input
 					type="date"
+					aria-label="Your Date of Birth"
+					placeholder="Your Date of Birth"
 					className="border border-gray-300 p-3 mb-6 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
 					value={dob1}
 					onChange={(e) => setDob1(e.target.value)}
@@ -226,12 +251,14 @@ export default function Home() {
 				</h2>
 				<input
 					type="text"
+					aria-label="Partner's Name"
 					placeholder="Partner's Name"
 					className="border border-gray-300 p-3 mb-4 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
 					value={name2}
 					onChange={(e) => setName2(e.target.value)}
 				/>
 				<select
+					aria-label="Partner's Gender"
 					className="border border-gray-300 p-3 mb-4 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
 					value={gender2}
 					onChange={(e) => setGender2(e.target.value)}
@@ -243,6 +270,8 @@ export default function Home() {
 				</select>
 				<input
 					type="date"
+					aria-label="Partner's Date of Birth"
+					placeholder="Partner's Date of Birth"
 					className="border border-gray-300 p-3 mb-6 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
 					value={dob2}
 					onChange={(e) => setDob2(e.target.value)}
@@ -251,8 +280,9 @@ export default function Home() {
 				<button
 					className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white p-3 rounded-lg text-xl font-semibold hover:from-indigo-500 hover:to-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-500 transition-all"
 					onClick={calculateCompatibility}
+					disabled={loading}
 				>
-					Calculate Love Compatibility
+					{loading ? "Calculating..." : "Calculate Love Compatibility"}
 				</button>
 
 				{result !== null && (

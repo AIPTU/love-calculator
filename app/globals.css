@@ -2,35 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	--color-text: #1a202c;
+	--color-background: #f7fafc;
+	--color-accent: #8b5cf6;
+	--color-accent-hover: #7a3bd3;
+	--color-accent-dark: #6c46dd;
+}
+
 body {
-	@apply bg-gradient-to-r from-purple-100 to-indigo-100 text-gray-900 antialiased;
 	font-family: "Inter", sans-serif;
 	line-height: 1.6;
+	color: var(--color-text);
+	background: var(--color-background);
 }
 
 a {
-	@apply text-indigo-600 hover:text-purple-600 transition-colors duration-300 ease-in-out;
+	color: var(--color-accent);
+	transition: color 0.3s ease-in-out;
+}
+
+a:hover {
+	color: var(--color-accent-hover);
 }
 
 button {
-	@apply transition-all duration-300 ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+	transform: scale(1.05);
+}
+
+button:active {
+	transform: scale(0.95);
 }
 
 input,
 select {
-	@apply border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 p-3;
+	border: 1px solid var(--color-accent-dark);
+	border-radius: 0.5rem;
+	padding: 0.5rem;
 }
 
 ::-webkit-scrollbar {
-	width: 8px;
+	width: 0.5rem;
 }
 
 ::-webkit-scrollbar-thumb {
-	@apply bg-purple-600 rounded-lg;
+	background-color: var(--color-accent);
+	border-radius: 1rem;
 }
 
 ::-webkit-scrollbar-track {
-	@apply bg-purple-100;
+	background-color: var(--color-background);
 }
 
 @keyframes fade-in {
@@ -49,13 +74,32 @@ select {
 }
 
 .card {
-	@apply bg-white shadow-md rounded-lg p-6;
+	background-color: var(--color-background);
+	border-radius: 0.5rem;
+	padding: 1.5rem;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.card-title {
-	@apply text-2xl font-semibold text-gray-800 mb-4;
+.card:hover {
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	transform: translateY(-2px);
 }
 
-.card-content {
-	@apply text-gray-600 text-base;
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-text: #f7fafc;
+		--color-background: #1a202c;
+		--color-accent: #8b5cf6;
+		--color-accent-hover: #7a3bd3;
+		--color-accent-dark: #6c46dd;
+	}
+
+	a {
+		color: var(--color-accent);
+	}
+
+	.card {
+		background-color: var(--color-background);
+		color: var(--color-text);
+	}
 }
