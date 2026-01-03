@@ -1,19 +1,28 @@
 {
-    "extends": [
-        "config:recommended",
-        ":disableDependencyDashboard"
-    ],
-    "labels": [
-        "dependencies"
-    ],
-    "packageRules": [
-        {
-            "matchUpdateTypes": [
-                "minor",
-                "patch"
-            ],
-            "automerge": true
-        }
-    ],
-    "automergeStrategy": "squash"
+  "extends": [
+    "config:best-practices",
+    ":disableDependencyDashboard"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "automerge": false 
+    }
+  ],
+  "automergeStrategy": "squash",
+  "prHourlyLimit": 5, 
+  "prConcurrentLimit": 3 
 }
+
