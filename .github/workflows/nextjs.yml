@@ -37,7 +37,7 @@ jobs:
         run: bun install
 
       - name: Build
-        run: bunx next build && bunx next export -o out
+        run: bunx --bun build ./index.tsx --outdir ./out
 
       - name: Upload
         uses: actions/upload-pages-artifact@v4
