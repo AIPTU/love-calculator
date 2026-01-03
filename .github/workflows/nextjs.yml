@@ -40,7 +40,7 @@ jobs:
         run: bunx next build && bunx next export -o out
 
       - name: Upload
-        uses: actions/upload-pages-artifact@v6
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./out
 
