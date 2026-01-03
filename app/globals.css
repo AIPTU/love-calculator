@@ -3,46 +3,92 @@
 @tailwind utilities;
 
 :root {
-	--color-text: #1a202c;
-	--color-background: #f7fafc;
-	--color-accent: #8b5cf6;
-	--color-accent-hover: #7a3bd3;
-	--color-accent-dark: #6c46dd;
+	--color-text: #ffffff;
+	--color-background: linear-gradient(135deg, #ff6b9d, #c44569, #6c5ce7);
+	--color-accent: #ff6b9d;
+	--color-accent-hover: #ff4757;
+	--color-accent-dark: #c44569;
+	--color-glass: rgba(255, 255, 255, 0.1);
+	--color-glass-border: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] {
+	--color-text: #f7fafc;
+	--color-background: linear-gradient(135deg, #2d3436, #636e72, #a29bfe);
+	--color-accent: #a29bfe;
+	--color-accent-hover: #6c5ce7;
+	--color-accent-dark: #636e72;
+	--color-glass: rgba(255, 255, 255, 0.05);
+	--color-glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+	box-sizing: border-box;
 }
 
 body {
-	font-family: "Inter", sans-serif;
+	font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 	line-height: 1.6;
 	color: var(--color-text);
 	background: var(--color-background);
+	background-attachment: fixed;
+	margin: 0;
+	padding: 0;
+	min-height: 100vh;
+	overflow-x: hidden;
 }
 
 a {
 	color: var(--color-accent);
-	transition: color 0.3s ease-in-out;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	text-decoration: none;
 }
 
 a:hover {
 	color: var(--color-accent-hover);
+	transform: translateY(-1px);
 }
 
 button {
-	transition: all 0.3s ease-in-out;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	border: none;
+	cursor: pointer;
+	font-weight: 600;
+	border-radius: 0.75rem;
 }
 
 button:hover {
-	transform: scale(1.05);
+	transform: translateY(-2px);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 button:active {
-	transform: scale(0.95);
+	transform: translateY(0);
 }
 
 input,
 select {
-	border: 1px solid var(--color-accent-dark);
+	border: 1px solid var(--color-glass-border);
 	border-radius: 0.5rem;
-	padding: 0.5rem;
+	padding: 0.75rem;
+	background: var(--color-glass);
+	color: var(--color-text);
+	font-size: 1rem;
+	transition: all 0.3s ease;
+	backdrop-filter: blur(10px);
+}
+
+input::placeholder,
+select::placeholder {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+input:focus,
+select:focus {
+	outline: none;
+	border-color: var(--color-accent);
+	box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.3);
+	background: rgba(255, 255, 255, 0.15);
 }
 
 ::-webkit-scrollbar {
@@ -50,18 +96,29 @@ select {
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: var(--color-accent);
+	background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
 	border-radius: 1rem;
 }
 
 ::-webkit-scrollbar-track {
-	background-color: var(--color-background);
+	background: var(--color-glass);
 }
 
 @keyframes fade-in {
 	0% {
 		opacity: 0;
-		transform: translateY(20px);
+		transform: translateY(20px) scale(0.95);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@keyframes slide-up {
+	0% {
+		opacity: 0;
+		transform: translateY(30px);
 	}
 	100% {
 		opacity: 1;
@@ -69,37 +126,160 @@ select {
 	}
 }
 
+@keyframes pulse-glow {
+	0%, 100% {
+		box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
+	}
+	50% {
+		box-shadow: 0 0 30px rgba(255, 107, 157, 0.8);
+	}
+}
+
+@keyframes float {
+	0%, 100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+}
+
+@keyframes confetti-fall {
+	0% {
+		transform: translateY(-100vh) rotate(0deg);
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(100vh) rotate(720deg);
+		opacity: 0;
+	}
+}
+
+.animate-confetti {
+	animation: confetti-fall 3s ease-in-out forwards;
+}
+
 .animate-fade-in {
-	animation: fade-in 0.8s ease-out forwards;
+	animation: fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-.card {
-	background-color: var(--color-background);
-	border-radius: 0.5rem;
+.animate-slide-up {
+	animation: slide-up 0.6s ease-out forwards;
+}
+
+.animate-pulse-glow {
+	animation: pulse-glow 2s infinite;
+}
+
+.animate-float {
+	animation: float 3s ease-in-out infinite;
+}
+
+.animate-heart-beat {
+	animation: heart-beat 1.5s ease-in-out infinite;
+}
+
+.glass-card {
+	background: var(--color-glass);
+	backdrop-filter: blur(20px);
+	border: 1px solid var(--color-glass-border);
+	border-radius: 1rem;
 	padding: 1.5rem;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.card:hover {
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-	transform: translateY(-2px);
+.glass-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+	background: rgba(255, 255, 255, 0.15);
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		--color-text: #f7fafc;
-		--color-background: #1a202c;
-		--color-accent: #8b5cf6;
-		--color-accent-hover: #7a3bd3;
-		--color-accent-dark: #6c46dd;
+.gradient-text {
+	background: linear-gradient(135deg, #ff6b9d, #c44569, #6c5ce7);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.floating-hearts {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	overflow: hidden;
+}
+
+.floating-hearts::before,
+.floating-hearts::after {
+	content: '💖';
+	position: absolute;
+	font-size: 2rem;
+	opacity: 0.1;
+	animation: float 6s ease-in-out infinite;
+}
+
+.floating-hearts::before {
+	top: 10%;
+	left: 10%;
+	animation-delay: 0s;
+}
+
+.floating-hearts::after {
+	top: 60%;
+	right: 15%;
+	animation-delay: 3s;
+	font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+	.glass-card {
+		padding: 1rem;
+		margin: 0 0.5rem;
 	}
 
-	a {
-		color: var(--color-accent);
+	button {
+		padding: 0.75rem 1.25rem;
+		font-size: 0.9rem;
+		min-height: 44px; /* Touch-friendly size */
 	}
 
-	.card {
-		background-color: var(--color-background);
-		color: var(--color-text);
+	input,
+	select {
+		padding: 0.625rem;
+		font-size: 0.9rem;
+		min-height: 44px; /* Touch-friendly size */
+	}
+
+	.floating-hearts::before,
+	.floating-hearts::after {
+		display: none; /* Hide floating hearts on mobile for better performance */
+	}
+}
+
+@media (max-width: 480px) {
+	body {
+		font-size: 14px;
+	}
+
+	h1 {
+		font-size: 1.75rem !important;
+	}
+
+	.glass-card {
+		padding: 0.75rem;
+		border-radius: 1rem;
+	}
+
+	button {
+		padding: 0.625rem 1rem;
+		font-size: 0.85rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
 	}
 }
