@@ -96,7 +96,11 @@ select:focus {
 }
 
 ::-webkit-scrollbar-thumb {
-	background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+	background: linear-gradient(
+		135deg,
+		var(--color-accent),
+		var(--color-accent-hover)
+	);
 	border-radius: 1rem;
 }
 
@@ -127,7 +131,8 @@ select:focus {
 }
 
 @keyframes pulse-glow {
-	0%, 100% {
+	0%,
+	100% {
 		box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
 	}
 	50% {
@@ -136,7 +141,8 @@ select:focus {
 }
 
 @keyframes float {
-	0%, 100% {
+	0%,
+	100% {
 		transform: translateY(0px);
 	}
 	50% {
@@ -211,7 +217,7 @@ select:focus {
 
 .floating-hearts::before,
 .floating-hearts::after {
-	content: '💖';
+	content: "💖";
 	position: absolute;
 	font-size: 2rem;
 	opacity: 0.1;

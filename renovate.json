@@ -18,11 +18,10 @@
       "matchUpdateTypes": [
         "major"
       ],
-      "automerge": false 
+      "automerge": false
     }
   ],
   "automergeStrategy": "squash",
-  "prHourlyLimit": 5, 
-  "prConcurrentLimit": 3 
+  "prHourlyLimit": 5,
+  "prConcurrentLimit": 3
 }
-

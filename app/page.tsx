@@ -1,7 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaHeart, FaStar, FaVenus, FaMars, FaGenderless, FaShare, FaCopy, FaDownload, FaPrint, FaFacebook, FaTwitter, FaWhatsapp } from "react-icons/fa";
+import {
+	FaHeart,
+	FaStar,
+	FaVenus,
+	FaMars,
+	FaGenderless,
+	FaShare,
+	FaCopy,
+	FaDownload,
+	FaPrint,
+	FaFacebook,
+	FaTwitter,
+	FaWhatsapp,
+} from "react-icons/fa";
+
+// Get the base path dynamically
+const getBasePath = () => {
+	if (typeof window !== "undefined") {
+		const pathname = window.location.pathname;
+		const match = pathname.match(/^\/([^\/]+)/);
+		if (match && match[1] && !pathname.startsWith("/?")) {
+			return `/${match[1]}`;
+		}
+	}
+	return "";
+};
 
 interface ZodiacSign {
 	name: string;
@@ -33,7 +58,9 @@ export default function Home() {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [zodiac1, setZodiac1] = useState<string>("");
 	const [zodiac2, setZodiac2] = useState<string>("");
-	const [breakdown, setBreakdown] = useState<CompatibilityBreakdown | null>(null);
+	const [breakdown, setBreakdown] = useState<CompatibilityBreakdown | null>(
+		null
+	);
 	const [showDetails, setShowDetails] = useState<boolean>(false);
 	const [showConfetti, setShowConfetti] = useState<boolean>(false);
 	const [shareableLink, setShareableLink] = useState<string>("");
@@ -42,13 +69,13 @@ export default function Home() {
 	useEffect(() => {
 		// Load data from URL parameters if present
 		const urlParams = new URLSearchParams(window.location.search);
-		const n1 = urlParams.get('n1');
-		const g1 = urlParams.get('g1');
-		const d1 = urlParams.get('d1');
-		const n2 = urlParams.get('n2');
-		const g2 = urlParams.get('g2');
-		const d2 = urlParams.get('d2');
-		const r = urlParams.get('r');
+		const n1 = urlParams.get("n1");
+		const g1 = urlParams.get("g1");
+		const d1 = urlParams.get("d1");
+		const n2 = urlParams.get("n2");
+		const g2 = urlParams.get("g2");
+		const d2 = urlParams.get("d2");
+		const r = urlParams.get("r");
 
 		if (n1 && g1 && d1 && n2 && g2 && d2 && r) {
 			setName1(decodeURIComponent(n1));
@@ -71,13 +98,17 @@ export default function Home() {
 
 				let compatibilityMessage = "";
 				if (resultNum >= 90) {
-					compatibilityMessage = "Perfect match! Your love story is written in the stars! ✨";
+					compatibilityMessage =
+						"Perfect match! Your love story is written in the stars! ✨";
 				} else if (resultNum >= 70) {
-					compatibilityMessage = "Great compatibility! With effort, this could be amazing! 💕";
+					compatibilityMessage =
+						"Great compatibility! With effort, this could be amazing! 💕";
 				} else if (resultNum >= 50) {
-					compatibilityMessage = "Decent match. Love requires work, but it's possible! 🤝";
+					compatibilityMessage =
+						"Decent match. Love requires work, but it's possible! 🤝";
 				} else {
-					compatibilityMessage = "Challenging compatibility. Friendship might be a better path! 🌟";
+					compatibilityMessage =
+						"Challenging compatibility. Friendship might be a better path! 🌟";
 				}
 
 				if (g1 === g2) {
@@ -96,7 +127,8 @@ export default function Home() {
 			start: "12-22",
 			end: "01-19",
 			compatibleWith: ["Taurus", "Virgo", "Scorpio", "Pisces"],
-			description: "Ambitious, disciplined, and reliable. Capricorns value tradition and hard work.",
+			description:
+				"Ambitious, disciplined, and reliable. Capricorns value tradition and hard work.",
 			element: "Earth",
 		},
 		{
@@ -104,7 +136,8 @@ export default function Home() {
 			start: "01-20",
 			end: "02-18",
 			compatibleWith: ["Gemini", "Libra", "Sagittarius", "Aries"],
-			description: "Innovative, independent, and humanitarian. Aquarians are thinkers and dreamers.",
+			description:
+				"Innovative, independent, and humanitarian. Aquarians are thinkers and dreamers.",
 			element: "Air",
 		},
 		{
@@ -112,7 +145,8 @@ export default function Home() {
 			start: "02-19",
 			end: "03-20",
 			compatibleWith: ["Taurus", "Cancer", "Scorpio", "Capricorn"],
-			description: "Compassionate, artistic, and intuitive. Pisces are empathetic and imaginative.",
+			description:
+				"Compassionate, artistic, and intuitive. Pisces are empathetic and imaginative.",
 			element: "Water",
 		},
 		{
@@ -120,7 +154,8 @@ export default function Home() {
 			start: "03-21",
 			end: "04-19",
 			compatibleWith: ["Gemini", "Leo", "Sagittarius", "Aquarius"],
-			description: "Energetic, courageous, and passionate. Aries are leaders and adventurers.",
+			description:
+				"Energetic, courageous, and passionate. Aries are leaders and adventurers.",
 			element: "Fire",
 		},
 		{
@@ -128,7 +163,8 @@ export default function Home() {
 			start: "04-20",
 			end: "05-20",
 			compatibleWith: ["Cancer", "Virgo", "Capricorn", "Pisces"],
-			description: "Reliable, patient, and sensual. Tauruses appreciate stability and comfort.",
+			description:
+				"Reliable, patient, and sensual. Tauruses appreciate stability and comfort.",
 			element: "Earth",
 		},
 		{
@@ -136,7 +172,8 @@ export default function Home() {
 			start: "05-21",
 			end: "06-20",
 			compatibleWith: ["Aries", "Leo", "Libra", "Aquarius"],
-			description: "Versatile, communicative, and witty. Geminis are curious and adaptable.",
+			description:
+				"Versatile, communicative, and witty. Geminis are curious and adaptable.",
 			element: "Air",
 		},
 		{
@@ -144,7 +181,8 @@ export default function Home() {
 			start: "06-21",
 			end: "07-22",
 			compatibleWith: ["Taurus", "Virgo", "Scorpio", "Pisces"],
-			description: "Emotional, nurturing, and intuitive. Cancers are protective and caring.",
+			description:
+				"Emotional, nurturing, and intuitive. Cancers are protective and caring.",
 			element: "Water",
 		},
 		{
@@ -152,7 +190,8 @@ export default function Home() {
 			start: "07-23",
 			end: "08-22",
 			compatibleWith: ["Aries", "Gemini", "Libra", "Sagittarius"],
-			description: "Confident, generous, and charismatic. Leos love attention and creativity.",
+			description:
+				"Confident, generous, and charismatic. Leos love attention and creativity.",
 			element: "Fire",
 		},
 		{
@@ -160,7 +199,8 @@ export default function Home() {
 			start: "08-23",
 			end: "09-22",
 			compatibleWith: ["Taurus", "Cancer", "Scorpio", "Capricorn"],
-			description: "Analytical, practical, and kind. Virgos are perfectionists and helpers.",
+			description:
+				"Analytical, practical, and kind. Virgos are perfectionists and helpers.",
 			element: "Earth",
 		},
 		{
@@ -168,7 +208,8 @@ export default function Home() {
 			start: "09-23",
 			end: "10-22",
 			compatibleWith: ["Gemini", "Leo", "Sagittarius", "Aquarius"],
-			description: "Diplomatic, fair, and social. Libras seek harmony and beauty.",
+			description:
+				"Diplomatic, fair, and social. Libras seek harmony and beauty.",
 			element: "Air",
 		},
 		{
@@ -176,7 +217,8 @@ export default function Home() {
 			start: "10-23",
 			end: "11-21",
 			compatibleWith: ["Cancer", "Virgo", "Capricorn", "Pisces"],
-			description: "Passionate, resourceful, and mysterious. Scorpios are intense and loyal.",
+			description:
+				"Passionate, resourceful, and mysterious. Scorpios are intense and loyal.",
 			element: "Water",
 		},
 		{
@@ -184,7 +226,8 @@ export default function Home() {
 			start: "11-22",
 			end: "12-21",
 			compatibleWith: ["Aries", "Leo", "Libra", "Aquarius"],
-			description: "Optimistic, freedom-loving, and philosophical. Sagittariuses are adventurers.",
+			description:
+				"Optimistic, freedom-loving, and philosophical. Sagittariuses are adventurers.",
 			element: "Fire",
 		},
 	];
@@ -215,8 +258,15 @@ export default function Home() {
 		});
 	};
 
-	const getZodiacCompatibility = (zodiac1: ZodiacSign, zodiac2: ZodiacSign): number => {
-		return zodiac1.compatibleWith.includes(zodiac2.name) ? 25 : zodiac1.element === zodiac2.element ? 15 : 5;
+	const getZodiacCompatibility = (
+		zodiac1: ZodiacSign,
+		zodiac2: ZodiacSign
+	): number => {
+		return zodiac1.compatibleWith.includes(zodiac2.name)
+			? 25
+			: zodiac1.element === zodiac2.element
+			? 15
+			: 5;
 	};
 
 	const getNameValue = (name: string): number => {
@@ -283,23 +333,32 @@ export default function Home() {
 
 			const zodiacSign1 = getZodiac(dob1);
 			const zodiacSign2 = getZodiac(dob2);
-			const zodiacComp = zodiacSign1 && zodiacSign2 ? getZodiacCompatibility(zodiacSign1, zodiacSign2) : 0;
+			const zodiacComp =
+				zodiacSign1 && zodiacSign2
+					? getZodiacCompatibility(zodiacSign1, zodiacSign2)
+					: 0;
 
 			const genderComp = gender1 !== gender2 ? 15 : 10;
 
 			const randomFactor = Math.floor(Math.random() * 21);
 
-			const total = Math.round((nameComp + ageComp + zodiacComp + genderComp + randomFactor) / 5);
+			const total = Math.round(
+				(nameComp + ageComp + zodiacComp + genderComp + randomFactor) / 5
+			);
 
 			let compatibilityMessage = "";
 			if (total >= 90) {
-				compatibilityMessage = "Perfect match! Your love story is written in the stars! ✨";
+				compatibilityMessage =
+					"Perfect match! Your love story is written in the stars! ✨";
 			} else if (total >= 70) {
-				compatibilityMessage = "Great compatibility! With effort, this could be amazing! 💕";
+				compatibilityMessage =
+					"Great compatibility! With effort, this could be amazing! 💕";
 			} else if (total >= 50) {
-				compatibilityMessage = "Decent match. Love requires work, but it's possible! 🤝";
+				compatibilityMessage =
+					"Decent match. Love requires work, but it's possible! 🤝";
 			} else {
-				compatibilityMessage = "Challenging compatibility. Friendship might be a better path! 🌟";
+				compatibilityMessage =
+					"Challenging compatibility. Friendship might be a better path! 🌟";
 			}
 
 			if (gender1 === gender2) {
@@ -343,6 +402,8 @@ export default function Home() {
 		setShowConfetti(false);
 		setShareableLink("");
 		setCopiedToClipboard(false);
+
+		window.history.replaceState({}, "", window.location.pathname);
 	};
 
 	const generateShareableLink = () => {
@@ -358,7 +419,8 @@ export default function Home() {
 			r: result.toString(),
 		});
 
-		const link = `${window.location.origin}?${params.toString()}`;
+		const basePath = getBasePath();
+		const link = `${window.location.origin}${basePath}?${params.toString()}`;
 		setShareableLink(link);
 		return link;
 	};
@@ -366,17 +428,19 @@ export default function Home() {
 	const shareResults = async () => {
 		if (!result) return;
 
-		const shareText = `💕 ${name1} and ${name2} are ${result}% compatible! Check our Love Calculator: ${shareableLink || generateShareableLink()}`;
+		const shareText = `💕 ${name1} and ${name2} are ${result}% compatible! Check our Love Calculator: ${
+			shareableLink || generateShareableLink()
+		}`;
 
 		if (navigator.share) {
 			try {
 				await navigator.share({
-					title: 'Love Calculator Results',
+					title: "Love Calculator Results",
 					text: shareText,
 					url: shareableLink || generateShareableLink(),
 				});
 			} catch (err) {
-				console.log('Share cancelled');
+				console.log("Share cancelled");
 			}
 		} else {
 			copyToClipboard(shareText);
@@ -384,14 +448,18 @@ export default function Home() {
 	};
 
 	const copyToClipboard = async (text?: string) => {
-		const copyText = text || `💕 ${name1} and ${name2} are ${result}% compatible! Check our Love Calculator: ${shareableLink || generateShareableLink()}`;
+		const copyText =
+			text ||
+			`💕 ${name1} and ${name2} are ${result}% compatible! Check our Love Calculator: ${
+				shareableLink || generateShareableLink()
+			}`;
 
 		try {
 			await navigator.clipboard.writeText(copyText);
 			setCopiedToClipboard(true);
 			setTimeout(() => setCopiedToClipboard(false), 2000);
 		} catch (err) {
-			console.error('Failed to copy: ', err);
+			console.error("Failed to copy: ", err);
 			fallbackCopyTextToClipboard(copyText);
 		}
 	};
@@ -403,11 +471,11 @@ export default function Home() {
 		textArea.focus();
 		textArea.select();
 		try {
-			document.execCommand('copy');
+			document.execCommand("copy");
 			setCopiedToClipboard(true);
 			setTimeout(() => setCopiedToClipboard(false), 2000);
 		} catch (err) {
-			console.error('Fallback: Oops, unable to copy', err);
+			console.error("Fallback: Oops, unable to copy", err);
 		}
 		document.body.removeChild(textArea);
 	};
@@ -415,25 +483,29 @@ export default function Home() {
 	const shareOnSocial = (platform: string) => {
 		if (!result) return;
 
-		const text = encodeURIComponent(`💕 ${name1} and ${name2} are ${result}% compatible!`);
-		const url = encodeURIComponent(shareableLink || generateShareableLink() || window.location.href);
+		const text = encodeURIComponent(
+			`💕 ${name1} and ${name2} are ${result}% compatible!`
+		);
+		const url = encodeURIComponent(
+			shareableLink || generateShareableLink() || window.location.href
+		);
 
-		let shareUrl = '';
+		let shareUrl = "";
 
 		switch (platform) {
-			case 'facebook':
+			case "facebook":
 				shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`;
 				break;
-			case 'twitter':
+			case "twitter":
 				shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
 				break;
-			case 'whatsapp':
+			case "whatsapp":
 				shareUrl = `https://wa.me/?text=${text}%20${url}`;
 				break;
 		}
 
 		if (shareUrl) {
-			window.open(shareUrl, '_blank', 'width=600,height=400');
+			window.open(shareUrl, "_blank", "width=600,height=400");
 		}
 	};
 
@@ -444,18 +516,26 @@ export default function Home() {
 				<h2>${name1} ❤️ ${name2}</h2>
 				<h3 style="font-size: 48px; color: #ff4757;">${result}% Compatible!</h3>
 				<p style="font-style: italic; margin: 20px 0;">${message}</p>
-				${zodiac1 && zodiac2 ? `<p><strong>Zodiac Signs:</strong> ${zodiac1} & ${zodiac2}</p>` : ''}
-				${breakdown ? `
+				${
+					zodiac1 && zodiac2
+						? `<p><strong>Zodiac Signs:</strong> ${zodiac1} & ${zodiac2}</p>`
+						: ""
+				}
+				${
+					breakdown
+						? `
 					<div style="margin: 20px 0;">
 						<h4>Compatibility Breakdown:</h4>
 						<p>Names: ${breakdown.name}% | Age: ${breakdown.age}% | Zodiac: ${breakdown.zodiac}% | Gender: ${breakdown.gender}% | Magic: ${breakdown.random}%</p>
 					</div>
-				` : ''}
+				`
+						: ""
+				}
 				<p style="margin-top: 30px; font-size: 12px; color: #666;">Generated by Love Calculator</p>
 			</div>
 		`;
 
-		const printWindow = window.open('', '_blank');
+		const printWindow = window.open("", "_blank");
 		if (printWindow) {
 			printWindow.document.write(printContent);
 			printWindow.document.close();
@@ -466,8 +546,8 @@ export default function Home() {
 	const downloadResults = () => {
 		if (!result) return;
 
-		const canvas = document.createElement('canvas');
-		const ctx = canvas.getContext('2d');
+		const canvas = document.createElement("canvas");
+		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 
 		canvas.width = 800;
@@ -475,48 +555,48 @@ export default function Home() {
 
 		// Create gradient background
 		const gradient = ctx.createLinearGradient(0, 0, 800, 600);
-		gradient.addColorStop(0, '#ff6b9d');
-		gradient.addColorStop(0.5, '#c44569');
-		gradient.addColorStop(1, '#6c5ce7');
+		gradient.addColorStop(0, "#ff6b9d");
+		gradient.addColorStop(0.5, "#c44569");
+		gradient.addColorStop(1, "#6c5ce7");
 
 		ctx.fillStyle = gradient;
 		ctx.fillRect(0, 0, 800, 600);
 
 		// Add hearts pattern
-		ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+		ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
 		for (let i = 0; i < 50; i++) {
 			const x = Math.random() * 800;
 			const y = Math.random() * 600;
 			const size = Math.random() * 20 + 5;
 			ctx.font = `${size}px Arial`;
-			ctx.fillText('💖', x, y);
+			ctx.fillText("💖", x, y);
 		}
 
 		// Add text
-		ctx.fillStyle = 'white';
-		ctx.textAlign = 'center';
-		ctx.font = 'bold 48px Arial';
-		ctx.fillText('Love Calculator', 400, 80);
+		ctx.fillStyle = "white";
+		ctx.textAlign = "center";
+		ctx.font = "bold 48px Arial";
+		ctx.fillText("Love Calculator", 400, 80);
 
-		ctx.font = 'bold 36px Arial';
+		ctx.font = "bold 36px Arial";
 		ctx.fillText(`${name1} ❤️ ${name2}`, 400, 140);
 
-		ctx.font = 'bold 72px Arial';
+		ctx.font = "bold 72px Arial";
 		ctx.fillText(`${result}%`, 400, 220);
 
-		ctx.font = '24px Arial';
-		ctx.fillText('Compatible!', 400, 260);
+		ctx.font = "24px Arial";
+		ctx.fillText("Compatible!", 400, 260);
 
 		if (zodiac1 && zodiac2) {
-			ctx.font = '18px Arial';
+			ctx.font = "18px Arial";
 			ctx.fillText(`Zodiac: ${zodiac1} & ${zodiac2}`, 400, 300);
 		}
 
-		ctx.font = '14px Arial';
-		ctx.fillText('Generated by Love Calculator', 400, 550);
+		ctx.font = "14px Arial";
+		ctx.fillText("Generated by Love Calculator", 400, 550);
 
 		// Download
-		const link = document.createElement('a');
+		const link = document.createElement("a");
 		link.download = `love-calculator-${name1}-${name2}.png`;
 		link.href = canvas.toDataURL();
 		link.click();
@@ -564,7 +644,11 @@ export default function Home() {
 								fontSize: `${Math.random() * 20 + 10}px`,
 							}}
 						>
-							{['🎉', '💖', '✨', '💕', '🌟', '💫', '🎊', '💝'][Math.floor(Math.random() * 8)]}
+							{
+								["🎉", "💖", "✨", "💕", "🌟", "💫", "🎊", "💝"][
+									Math.floor(Math.random() * 8)
+								]
+							}
 						</div>
 					))}
 				</div>
@@ -572,7 +656,8 @@ export default function Home() {
 
 			<div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
 				<h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 sm:mb-8 text-center animate-pulse drop-shadow-lg">
-					Love Calculator <FaHeart className="inline text-red-400 animate-ping" />
+					Love Calculator{" "}
+					<FaHeart className="inline text-red-400 animate-ping" />
 				</h1>
 
 				<div className="bg-white/10 backdrop-blur-md p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full border border-white/20">
@@ -595,10 +680,18 @@ export default function Home() {
 									value={gender1}
 									onChange={(e) => setGender1(e.target.value)}
 								>
-									<option value="" className="text-gray-800">Select Gender</option>
-									<option value="male" className="text-gray-800">Male</option>
-									<option value="female" className="text-gray-800">Female</option>
-									<option value="nonbinary" className="text-gray-800">Non-Binary</option>
+									<option value="" className="text-gray-800">
+										Select Gender
+									</option>
+									<option value="male" className="text-gray-800">
+										Male
+									</option>
+									<option value="female" className="text-gray-800">
+										Female
+									</option>
+									<option value="nonbinary" className="text-gray-800">
+										Non-Binary
+									</option>
 								</select>
 								<input
 									type="date"
@@ -627,10 +720,18 @@ export default function Home() {
 									value={gender2}
 									onChange={(e) => setGender2(e.target.value)}
 								>
-									<option value="" className="text-gray-800">Select Gender</option>
-									<option value="male" className="text-gray-800">Male</option>
-									<option value="female" className="text-gray-800">Female</option>
-									<option value="nonbinary" className="text-gray-800">Non-Binary</option>
+									<option value="" className="text-gray-800">
+										Select Gender
+									</option>
+									<option value="male" className="text-gray-800">
+										Male
+									</option>
+									<option value="female" className="text-gray-800">
+										Female
+									</option>
+									<option value="nonbinary" className="text-gray-800">
+										Non-Binary
+									</option>
 								</select>
 								<input
 									type="date"
@@ -682,7 +783,7 @@ export default function Home() {
 											{getGenderIcon(gender1)} {name1}&apos;s Zodiac: {zodiac1}
 										</h4>
 										<p className="text-white/80 text-xs sm:text-sm">
-											{zodiacSigns.find(z => z.name === zodiac1)?.description}
+											{zodiacSigns.find((z) => z.name === zodiac1)?.description}
 										</p>
 									</div>
 									<div className="bg-white/5 p-3 sm:p-4 rounded-lg">
@@ -690,7 +791,7 @@ export default function Home() {
 											{getGenderIcon(gender2)} {name2}&apos;s Zodiac: {zodiac2}
 										</h4>
 										<p className="text-white/80 text-xs sm:text-sm">
-											{zodiacSigns.find(z => z.name === zodiac2)?.description}
+											{zodiacSigns.find((z) => z.name === zodiac2)?.description}
 										</p>
 									</div>
 								</div>
@@ -708,24 +809,44 @@ export default function Home() {
 									{showDetails && (
 										<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-4">
 											<div className="text-center">
-												<div className="text-lg sm:text-2xl font-bold text-white">{breakdown.name}%</div>
-												<div className="text-xs sm:text-sm text-white/70">Names</div>
+												<div className="text-lg sm:text-2xl font-bold text-white">
+													{breakdown.name}%
+												</div>
+												<div className="text-xs sm:text-sm text-white/70">
+													Names
+												</div>
 											</div>
 											<div className="text-center">
-												<div className="text-lg sm:text-2xl font-bold text-white">{breakdown.age}%</div>
-												<div className="text-xs sm:text-sm text-white/70">Age</div>
+												<div className="text-lg sm:text-2xl font-bold text-white">
+													{breakdown.age}%
+												</div>
+												<div className="text-xs sm:text-sm text-white/70">
+													Age
+												</div>
 											</div>
 											<div className="text-center">
-												<div className="text-lg sm:text-2xl font-bold text-white">{breakdown.zodiac}%</div>
-												<div className="text-xs sm:text-sm text-white/70">Zodiac</div>
+												<div className="text-lg sm:text-2xl font-bold text-white">
+													{breakdown.zodiac}%
+												</div>
+												<div className="text-xs sm:text-sm text-white/70">
+													Zodiac
+												</div>
 											</div>
 											<div className="text-center">
-												<div className="text-lg sm:text-2xl font-bold text-white">{breakdown.gender}%</div>
-												<div className="text-xs sm:text-sm text-white/70">Gender</div>
+												<div className="text-lg sm:text-2xl font-bold text-white">
+													{breakdown.gender}%
+												</div>
+												<div className="text-xs sm:text-sm text-white/70">
+													Gender
+												</div>
 											</div>
 											<div className="text-center col-span-2 sm:col-span-1">
-												<div className="text-lg sm:text-2xl font-bold text-white">{breakdown.random}%</div>
-												<div className="text-xs sm:text-sm text-white/70">Magic</div>
+												<div className="text-lg sm:text-2xl font-bold text-white">
+													{breakdown.random}%
+												</div>
+												<div className="text-xs sm:text-sm text-white/70">
+													Magic
+												</div>
 											</div>
 										</div>
 									)}
@@ -734,7 +855,9 @@ export default function Home() {
 
 							{/* Love Tips */}
 							<div className="bg-white/5 p-3 sm:p-4 rounded-lg">
-								<h4 className="text-base sm:text-lg font-semibold text-white mb-2">💡 Love Tips</h4>
+								<h4 className="text-base sm:text-lg font-semibold text-white mb-2">
+									💡 Love Tips
+								</h4>
 								<ul className="text-white/80 text-xs sm:text-sm space-y-1">
 									{getLoveTips(result).map((tip, index) => (
 										<li key={index}>• {tip}</li>
@@ -751,21 +874,21 @@ export default function Home() {
 								{/* Social Media Buttons */}
 								<div className="flex flex-wrap gap-2 mb-3">
 									<button
-										onClick={() => shareOnSocial('facebook')}
+										onClick={() => shareOnSocial("facebook")}
 										className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition-all flex items-center text-sm"
 										title="Share on Facebook"
 									>
 										<FaFacebook className="mr-1" /> Facebook
 									</button>
 									<button
-										onClick={() => shareOnSocial('twitter')}
+										onClick={() => shareOnSocial("twitter")}
 										className="bg-blue-400 hover:bg-blue-500 text-white p-2 rounded-lg transition-all flex items-center text-sm"
 										title="Share on Twitter"
 									>
 										<FaTwitter className="mr-1" /> Twitter
 									</button>
 									<button
-										onClick={() => shareOnSocial('whatsapp')}
+										onClick={() => shareOnSocial("whatsapp")}
 										className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition-all flex items-center text-sm"
 										title="Share on WhatsApp"
 									>
@@ -788,7 +911,7 @@ export default function Home() {
 										title="Copy to Clipboard"
 									>
 										<FaCopy className="mr-1" />
-										{copiedToClipboard ? 'Copied!' : 'Copy'}
+										{copiedToClipboard ? "Copied!" : "Copy"}
 									</button>
 									<button
 										onClick={downloadResults}
@@ -809,7 +932,9 @@ export default function Home() {
 								{/* Shareable Link */}
 								{shareableLink && (
 									<div className="mt-3 p-2 bg-white/10 rounded-lg">
-										<p className="text-xs text-white/70 mb-1">Shareable Link:</p>
+										<p className="text-xs text-white/70 mb-1">
+											Shareable Link:
+										</p>
 										<input
 											type="text"
 											value={shareableLink}
