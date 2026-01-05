@@ -211,7 +211,7 @@ export default function Home() {
 	};
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-rose-400 via-pink-500 to-purple-600 relative overflow-hidden">
+		<div className="min-h-screen bg-linear-to-br from-rose-400 via-pink-500 to-purple-600 relative overflow-hidden">
 			<div className="absolute inset-0 pointer-events-none">
 				{[...Array(20)].map((_, i) => (
 					<FaHeart
@@ -338,7 +338,7 @@ export default function Home() {
 
 					<div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
 						<button
-							className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white p-3 sm:p-4 rounded-lg sm:rounded-xl font-semibold hover:from-rose-500 hover:to-pink-500 focus:outline-none focus:ring-4 focus:ring-pink-300 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+							className="flex-1 bg-linear-to-r from-pink-500 to-rose-500 text-white p-3 sm:p-4 rounded-lg sm:rounded-xl font-semibold hover:from-rose-500 hover:to-pink-500 focus:outline-none focus:ring-4 focus:ring-pink-300 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
 							onClick={calculateCompatibility}
 							disabled={loading}
 						>
