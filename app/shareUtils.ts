@@ -1,7 +1,83 @@
 import { CompatibilityBreakdown } from "./types";
 import { getBasePath } from "./utils";
 
-export const generateShareableLink = (
+const compactEncode = (data: {
+    gender1: string;
+    gender2: string;
+    dob1: string;
+    dob2: string;
+    result: number;
+}): string => {
+    const d1Compact = parseInt(data.dob1.replace(/-/g, "")).toString(36);
+    const d2Compact = parseInt(data.dob2.replace(/-/g, "")).toString(36);
+
+    const g1 = data.gender1[0] === "m" ? "0" : data.gender1[0] === "f" ? "1" : "2";
+    const g2 = data.gender2[0] === "m" ? "0" : data.gender2[0] === "f" ? "1" : "2";
+
+    const r = data.result.toString(36);
+
+    return `${g1}${g2}${d1Compact}${d2Compact}${r}`;
+};
+
+const compactDecode = (encoded: string): {
+    g1: string;
+    g2: string;
+    d1: string;
+    d2: string;
+    r: number;
+} | null => {
+    try {
+        const g1Code = encoded[0];
+        const g2Code = encoded[1];
+
+        let remaining = encoded.substring(2);
+
+        let resultPart = "";
+        let datesPart = "";
+
+        if (remaining.length > 10) {
+            resultPart = remaining.substring(remaining.length - 2);
+            datesPart = remaining.substring(0, remaining.length - 2);
+        } else {
+            resultPart = remaining.substring(remaining.length - 1);
+            datesPart = remaining.substring(0, remaining.length - 1);
+        }
+
+        const midPoint = Math.floor(datesPart.length / 2);
+        const d1Base36 = datesPart.substring(0, midPoint);
+        const d2Base36 = datesPart.substring(midPoint);
+
+        const d1Num = parseInt(d1Base36, 36).toString().padStart(8, '0');
+        const d2Num = parseInt(d2Base36, 36).toString().padStart(8, '0');
+
+        const d1 = `${d1Num.substring(0, 4)}-${d1Num.substring(4, 6)}-${d1Num.substring(6, 8)}`;
+        const d2 = `${d2Num.substring(0, 4)}-${d2Num.substring(4, 6)}-${d2Num.substring(6, 8)}`;
+
+        const genderMap: Record<string, string> = { "0": "m", "1": "f", "2": "n" };
+        const g1 = genderMap[g1Code] || "m";
+        const g2 = genderMap[g2Code] || "m";
+
+        const r = parseInt(resultPart, 36);
+
+        console.log('Decoded:', { g1, g2, d1, d2, r });
+
+        return { g1, g2, d1, d2, r };
+    } catch (error) {
+        console.error('Decode error:', error);
+        return null;
+    }
+};
+
+const createChecksum = async (data: string): Promise<string> => {
+    const encoder = new TextEncoder();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(data));
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.slice(0, 2)
+        .reduce((acc, byte) => acc + byte.toString(36).padStart(2, '0'), '')
+        .substring(0, 3);
+};
+
+export const generateShareableLink = async (
     name1: string,
     name2: string,
     gender1: string,
@@ -9,19 +85,46 @@ export const generateShareableLink = (
     dob1: string,
     dob2: string,
     result: number
-): string => {
-    const params = new URLSearchParams({
-        n1: encodeURIComponent(name1),
-        g1: gender1,
-        d1: dob1,
-        n2: encodeURIComponent(name2),
-        g2: gender2,
-        d2: dob2,
-        r: result.toString(),
-    });
+): Promise<string> => {
+    const compact = compactEncode({ gender1, gender2, dob1, dob2, result });
+    const checksum = await createChecksum(compact);
+    const encoded = `${compact}${checksum}`;
 
-    const basePath = getBasePath();
-    return `${window.location.origin}${basePath}?${params.toString()}`;
+    return `${window.location.origin}${window.location.pathname}#${encoded}`;
+};
+
+export const decodeShareableLink = async (encoded: string): Promise<{
+    d1: string;
+    d2: string;
+    g1: string;
+    g2: string;
+    r: number;
+} | null> => {
+    if (encoded.length < 10) return null;
+
+    try {
+        const checksumLength = 3;
+        const data = encoded.substring(0, encoded.length - checksumLength);
+        const checksum = encoded.substring(encoded.length - checksumLength);
+
+        const expectedChecksum = await createChecksum(data);
+
+        console.log('Checksum verification:', {
+            received: checksum,
+            expected: expectedChecksum,
+            match: checksum === expectedChecksum
+        });
+
+        if (checksum !== expectedChecksum) {
+            console.error('Checksum mismatch');
+            return null;
+        }
+
+        return compactDecode(data);
+    } catch (error) {
+        console.error('Decode error:', error);
+        return null;
+    }
 };
 
 export const shareResults = async (
@@ -30,18 +133,18 @@ export const shareResults = async (
     result: number,
     shareableLink: string
 ) => {
-    const shareText = `💕 ${name1} and ${name2} are ${result}% compatible! Check our Love Calculator: ${shareableLink}`;
+    const shareText = `💕 ${name1} and ${name2} are ${result}% compatible!`;
 
-    if (navigator.share) {
-        try {
-            await navigator.share({
-                title: "Love Calculator Results",
-                text: shareText,
-                url: shareableLink,
-            });
-        } catch (err) {
-            console.log("Share cancelled");
-        }
+    if (!navigator.share) return;
+
+    try {
+        await navigator.share({
+            title: "Love Calculator Results",
+            text: shareText,
+            url: shareableLink,
+        });
+    } catch {
+        console.log("Share cancelled");
     }
 };
 
@@ -52,61 +155,52 @@ export const copyToClipboard = async (
     shareableLink: string,
     setCopiedCallback: (copied: boolean) => void
 ) => {
-    const copyText = `💕 ${name1} and ${name2} are ${result}% compatible! Check our Love Calculator: ${shareableLink}`;
+    const text = `💕 ${name1} and ${name2} are ${result}% compatible! ${shareableLink}`;
 
     try {
-        await navigator.clipboard.writeText(copyText);
+        await navigator.clipboard.writeText(text);
         setCopiedCallback(true);
         setTimeout(() => setCopiedCallback(false), 2000);
-    } catch (err) {
-        console.error("Failed to copy: ", err);
-        fallbackCopyTextToClipboard(copyText, setCopiedCallback);
+    } catch {
+        fallbackCopyTextToClipboard(text, setCopiedCallback);
     }
 };
 
-const fallbackCopyTextToClipboard = (text: string, setCopiedCallback: (copied: boolean) => void) => {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-        document.execCommand("copy");
-        setCopiedCallback(true);
-        setTimeout(() => setCopiedCallback(false), 2000);
-    } catch (err) {
-        console.error("Fallback: Oops, unable to copy", err);
-    }
-    document.body.removeChild(textArea);
+const fallbackCopyTextToClipboard = (
+    text: string,
+    setCopiedCallback: (copied: boolean) => void
+) => {
+    const el = document.createElement("textarea");
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+    setCopiedCallback(true);
+    setTimeout(() => setCopiedCallback(false), 2000);
 };
+
+type SocialPlatform = "facebook" | "twitter" | "whatsapp";
 
 export const shareOnSocial = (
-    platform: string,
+    platform: SocialPlatform,
     name1: string,
     name2: string,
     result: number,
     shareableLink: string
 ) => {
-    const text = encodeURIComponent(`💕 ${name1} and ${name2} are ${result}% compatible!`);
+    const text = encodeURIComponent(
+        `💕 ${name1} and ${name2} are ${result}% compatible!`
+    );
     const url = encodeURIComponent(shareableLink);
 
-    let shareUrl = "";
+    const map: Record<SocialPlatform, string> = {
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`,
+        twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+        whatsapp: `https://wa.me/?text=${text}%20${url}`,
+    };
 
-    switch (platform) {
-        case "facebook":
-            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`;
-            break;
-        case "twitter":
-            shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-            break;
-        case "whatsapp":
-            shareUrl = `https://wa.me/?text=${text}%20${url}`;
-            break;
-    }
-
-    if (shareUrl) {
-        window.open(shareUrl, "_blank", "width=600,height=400");
-    }
+    window.open(map[platform], "_blank", "width=600,height=400");
 };
 
 export const printResults = (

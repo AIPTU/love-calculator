@@ -30,6 +30,7 @@ import {
 	getLoveTips,
 } from "./utils";
 import {
+	decodeShareableLink,
 	generateShareableLink,
 	shareResults as shareResultsUtil,
 	copyToClipboard as copyToClipboardUtil,
@@ -59,48 +60,50 @@ export default function Home() {
 	const [copiedToClipboard, setCopiedToClipboard] = useState<boolean>(false);
 
 	useEffect(() => {
-		const urlParams = new URLSearchParams(window.location.search);
-		const n1 = urlParams.get("n1");
-		const g1 = urlParams.get("g1");
-		const d1 = urlParams.get("d1");
-		const n2 = urlParams.get("n2");
-		const g2 = urlParams.get("g2");
-		const d2 = urlParams.get("d2");
-		const r = urlParams.get("r");
+		if (typeof window === "undefined") return;
 
-		if (n1 && g1 && d1 && n2 && g2 && d2 && r) {
-			setName1(decodeURIComponent(n1));
+		const hash = window.location.hash;
+
+		if (!hash || !hash.startsWith("#")) return;
+
+		const encoded = hash.substring(1);
+		if (!encoded || encoded.length < 10) return;
+
+		let cancelled = false;
+
+		const loadFromSharedUrl = async () => {
+			const decoded = await decodeShareableLink(encoded);
+			if (!decoded || cancelled) return;
+
+			const { d1, d2, g1, g2, r } = decoded;
+
 			setGender1(g1);
 			setDob1(d1);
-			setName2(decodeURIComponent(n2));
 			setGender2(g2);
 			setDob2(d2);
+			setResult(r);
 
-			setTimeout(() => {
-				const zodiacSign1 = getZodiac(d1);
-				const zodiacSign2 = getZodiac(d2);
+			const zodiacSign1 = getZodiac(d1);
+			const zodiacSign2 = getZodiac(d2);
 
-				setZodiac1(zodiacSign1?.name || "");
-				setZodiac2(zodiacSign2?.name || "");
+			setZodiac1(zodiacSign1?.name || "");
+			setZodiac2(zodiacSign2?.name || "");
 
-				const resultNum = parseInt(r);
-				setResult(resultNum);
+			const compatibilityMessage = getCompatibilityMessage(r, g1, g2);
+			setMessage(compatibilityMessage);
 
-				let compatibilityMessage = getCompatibilityMessage(resultNum, g1, g2);
-				setMessage(compatibilityMessage);
+			const link = await generateShareableLink("", "", g1, g2, d1, d2, r);
 
-				const link = generateShareableLink(
-					decodeURIComponent(n1),
-					decodeURIComponent(n2),
-					g1,
-					g2,
-					d1,
-					d2,
-					resultNum
-				);
+			if (!cancelled) {
 				setShareableLink(link);
-			}, 500);
-		}
+			}
+		};
+
+		loadFromSharedUrl();
+
+		return () => {
+			cancelled = true;
+		};
 	}, []);
 
 	const calculateCompatibility = (): void => {
@@ -116,7 +119,7 @@ export default function Home() {
 
 		setLoading(true);
 
-		setTimeout(() => {
+		setTimeout(async () => {
 			const nameComp = calculateNameCompatibility(name1, name2);
 			const ageComp = calculateAgeCompatibility(dob1, dob2);
 
@@ -164,7 +167,7 @@ export default function Home() {
 				setTimeout(() => setShowConfetti(false), 3000);
 			}
 
-			const link = generateShareableLink(
+			const link = await generateShareableLink(
 				name1,
 				name2,
 				gender1,
